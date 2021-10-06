@@ -12,6 +12,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use('/TestApp',(req,res)=>{
+    res.status(200).json({
+        message: 'Test Application'
+    });
+});
 
 app.use('/user',userRouter);
 
