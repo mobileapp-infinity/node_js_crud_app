@@ -64,7 +64,11 @@ exports.loginUser = async (req,res,next) => {
         });
 
     } catch (error) {
-        next(error);
+        res.status(500).json({
+            status: 0,
+            message: error,
+            data: null
+        });
     }
 }
 

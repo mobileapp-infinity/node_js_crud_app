@@ -5,7 +5,7 @@ const errorHandler = async (err,req,res,next) => {
 
     res.status(500).json({
         status: 0,
-        message: err,
+        message: err.stack,
         data: null
     });
 
