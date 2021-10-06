@@ -66,7 +66,7 @@ exports.loginUser = async (req,res,next) => {
     } catch (error) {
         res.status(500).json({
             status: 0,
-            message: error,
+            message: error.message,
             data: null
         });
     }
