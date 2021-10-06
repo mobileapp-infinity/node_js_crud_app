@@ -3,12 +3,6 @@ const ErrorResponse = require('../utils/error_response');
 const errorHandler = async (err,req,res,next) => {
     let error = { ...err };
 
-    res.status(500).json({
-        status: 0,
-        message: err.stack,
-        data: null
-    });
-
     error.message = err.message;
     //Mogoose bad ObjectId
     if(err.name === 'CastError'){

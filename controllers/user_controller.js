@@ -9,7 +9,8 @@ exports.registerUser = async (req,res,next) => {
         const userModel = UserModel(req.body);
         userModel.status = 1;
         userModel.otp = 154469;
-        userModel.generateAuthToken();
+        const token = userModel.generateAuthToken();
+        userModel.token = token;
         await userModel.save();
         // emailService.sendMail('scspl.harsh@gmail.com','Verify OTP!','123685 is your OTP for registration!');
         res.status(201).json({
@@ -56,6 +57,9 @@ exports.loginUser = async (req,res,next) => {
                 data: null
             });
         }
+
+        const token = user.generateAuthToken();
+        user.token = token;
         
         res.status(200).json({
             status: 1,
@@ -64,11 +68,7 @@ exports.loginUser = async (req,res,next) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            status: 0,
-            message: error.message,
-            data: null
-        });
+        next(error);
     }
 }
 
