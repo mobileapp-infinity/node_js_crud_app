@@ -122,21 +122,24 @@ exports.changePassword = async (req,res,next) => {
         if(isMatch === false){
             return res.status(401).json({
                 status: 0,
-                message: 'Old password doesn\'t match with your existing password!' 
+                message: 'Old password doesn\'t match with your existing password!',
+                data: {} 
             });
         }
 
         if(newPassword !== confirmPassword){
             return res.status(401).json({
                 status: 0,
-                message: 'New password and confirm password must be same!' 
+                message: 'New password and confirm password must be same!',
+                data: {}
             });
         }
 
         if(newPassword.length < 8){
             return res.status(401).json({
                 status: 0,
-                message: 'Password length atleast 8 character long!' 
+                message: 'Password length atleast 8 character long!',
+                data: {}
             });
         }
 
@@ -145,7 +148,8 @@ exports.changePassword = async (req,res,next) => {
 
         res.status(200).json({
             status: 1,
-            message: 'Your password has been changed!' 
+            message: 'Your password has been changed!',
+            data: {}
         });
 
     } catch (error) {
