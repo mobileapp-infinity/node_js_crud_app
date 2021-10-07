@@ -8,17 +8,16 @@ exports.registerUser = async (req,res,next) => {
     try {
         const userModel = UserModel(req.body);
         userModel.status = 1;
-        userModel.otp = 154469;
-        const token = userModel.generateAuthToken();
-        userModel.token = token;
+        userModel.otp = Math.floor(100000 + Math.random() * 900000);
+        userModel.generateAuthToken();
         await userModel.save();
-        // emailService.sendMail('scspl.harsh@gmail.com','Verify OTP!','123685 is your OTP for registration!');
         res.status(201).json({
             status: 1,
-            message: 'Please verify otp',
+            message: 'Registered Successfully!',
             data: userModel
         });
     } catch (error) {
+        console.log(error);
         next(error);
     }
 }
@@ -33,7 +32,7 @@ exports.loginUser = async (req,res,next) => {
         const user = await UserModel.findOne({ emailId: userName }) || await UserModel.findOne({ mobileNo: userName });;
         
         if(!user){
-            res.status(400).json({
+            return res.status(400).json({
                 status: 0,
                 message: 'Invalid Username Or Password!',
                 data: null
@@ -41,7 +40,7 @@ exports.loginUser = async (req,res,next) => {
         }
 
         if(user.status === 1){
-            res.status(401).json({
+            return res.status(401).json({
                 status: 0,
                 message: 'Unauthorized Access',
                 data: null
@@ -51,20 +50,25 @@ exports.loginUser = async (req,res,next) => {
         const isMatch = bcryptjs.compareSync(password,user.password);
 
         if(isMatch === false){
-            res.status(401).json({
+            return res.status(401).json({
                 status: 0,
                 message: 'Invalid Username Or Password!',
                 data: null
             });
         }
 
-        const token = user.generateAuthToken();
-        user.token = token;
+        user.generateAuthToken();
+
+        const userObj = user.toObject();
+
+        delete userObj['otp'];
+        delete userObj['androidId'];
+        delete userObj['__v'];
         
         res.status(200).json({
             status: 1,
-            message: 'Login Scucessful',
-            data: user
+            message: 'Login Scucessful!',
+            data: userObj
         });
 
     } catch (error) {
@@ -77,13 +81,20 @@ exports.loginUser = async (req,res,next) => {
 exports.verifyOTP = async (req,res,next) => {
     try {
         const enteredOTP = req.body.otp;
-        const token = req.token;
-        const user = await UserModel.findOne({ 'tokens.token': token });
+        const user = req.user;
+
+        if(user.status === 2){
+            return res.status(200).json({
+                status: 1,
+                message: 'OTP Already  Verified!',
+                data: user
+            });
+        }
         
         if(enteredOTP === user.otp.toString()){
             user.status = 2;
             await user.save();
-            res.status(200).json({
+            return res.status(200).json({
                 status: 1,
                 message: 'OTP Verified Successfully!',
                 data: user

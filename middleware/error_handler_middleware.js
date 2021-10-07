@@ -11,15 +11,15 @@ const errorHandler = async (err,req,res,next) => {
     }
 
     //Mongoose validation error
-    if(err.name === 'ValidationError'){
-        const message = Object.values(err.errors).map(val => val.message);
+    if(err.name === 'MongoServerError'){
+        const message = `${Object.values(err.keyValue)} already exist!`
         error = new ErrorResponse(message,400);
     }
 
     res.status(error.statusCode || 500).json({
         status: 0,
         message: error.message || 'Server Error',
-        data: null
+        data: {}
     });
 }
 

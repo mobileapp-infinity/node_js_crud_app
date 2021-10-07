@@ -30,12 +30,10 @@ const userSchema = mongoose.Schema({
         required: true
     
     },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }],
+    token: {
+        type: String,
+        required: true
+    },    
     status: {
         type: Number,
         default: 0 
@@ -52,7 +50,7 @@ const userSchema = mongoose.Schema({
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
     const token = jwt.sign({ _id: user._id.toString() },process.env.JWT_SECRET);
-    user.tokens = user.tokens.concat({ token });
+    user.token = token;
     return token;
 }
 
