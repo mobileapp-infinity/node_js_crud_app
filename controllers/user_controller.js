@@ -35,15 +35,15 @@ exports.loginUser = async (req,res,next) => {
             return res.status(400).json({
                 status: 0,
                 message: 'Invalid Username Or Password!',
-                data: null
+                data: {}
             });
         }
 
         if(user.status === 1){
             return res.status(401).json({
                 status: 0,
-                message: 'Unauthorized Access',
-                data: null
+                message: 'Please verify your account!',
+                data: {}
             });
         }    
 
@@ -53,7 +53,7 @@ exports.loginUser = async (req,res,next) => {
             return res.status(401).json({
                 status: 0,
                 message: 'Invalid Username Or Password!',
-                data: null
+                data: {}
             });
         }
 
@@ -103,7 +103,7 @@ exports.verifyOTP = async (req,res,next) => {
         res.status(401).json({
             status: 0,
             message: 'Invalid OTP!',
-            data: null
+            data: {}
         });
     } catch (error) {
         next(error)
