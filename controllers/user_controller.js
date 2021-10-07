@@ -109,3 +109,100 @@ exports.verifyOTP = async (req,res,next) => {
         next(error)
     }
 }
+
+exports.changePassword = async (req,res,next) => {
+    try {
+        const oldPassword = req.body.oldPassword;
+        const newPassword = req.body.newPassword;
+        const confirmPassword = req.body.confirmPassword;
+        const user = req.user;
+        
+        const isMatch = bcryptjs.compareSync(oldPassword,user.password);
+        
+        if(isMatch === false){
+            return res.status(401).json({
+                status: 0,
+                message: 'Old password doesn\'t match with your existing password!' 
+            });
+        }
+
+        if(newPassword !== confirmPassword){
+            return res.status(401).json({
+                status: 0,
+                message: 'New password and confirm password must be same!' 
+            });
+        }
+
+        if(newPassword.length >= 8){
+            return res.status(401).json({
+                status: 0,
+                message: 'Password length atleast 8 character long!' 
+            });
+        }
+
+        user.password = await bcryptjs.hash(newPassword,8);
+        await user.save();    
+
+        res.status(200).json({
+            status: 1,
+            message: 'Your password has been changed!' 
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.forgotPassword = async (req,res,next) => {
+    try {
+        const emailId = req.body.emailId;
+        const user = await UserModel.findOne({ emailId });
+        if(!user){
+            return res.status(401).json({
+                status: 0,
+                message: 'Please enter registered Email-ID!',
+                data: {}
+            });
+        }
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        user.otp = otp;
+        await user.save();
+        res.status(200).json({
+            status: 1,
+            message: 'Please verify otp!',
+            data: user
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.updateProfile = async (req,res,next) => {
+    try {
+        const user = await req.user.updateOne(req.body,{ new: true });
+        res.status(200).json({
+            status: 1,
+            message: "Profile has been updated!",
+            data: user
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.logoutUser = async (req,res,next) => {
+    try {
+        const user = req.user;
+        user.generateAuthToken();
+        await user.save();
+        res.status(200).json({
+            status: 1,
+            message: "You have been logged out successfully!"
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
