@@ -133,7 +133,7 @@ exports.changePassword = async (req,res,next) => {
             });
         }
 
-        if(newPassword.length >= 8){
+        if(newPassword.length < 8){
             return res.status(401).json({
                 status: 0,
                 message: 'Password length atleast 8 character long!' 
