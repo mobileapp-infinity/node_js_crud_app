@@ -11,13 +11,13 @@ const userSchema = mongoose.Schema({
     emailId: {
         type: String,
         required: [true, 'Please add an email.'],
-        unique: [true,'EmailId already registered!'],
+        unique: true,
         trim: true
     },
     mobileNo: {
         type: String,
         required: [true,'Please add a mobile No.'],
-        unique: [true,'Mobile no already registered!'],
+        unique: true,
         maxlength: [10,'Mobile no can not be more than 10 digit!']
     },
     password: {

@@ -110,10 +110,13 @@ exports.verifyOTP = async (req,res,next) => {
     }
 }
 
+
+//change password
+//path /user/changePassword
 exports.changePassword = async (req,res,next) => {
     try {
         const oldPassword = req.body.oldPassword;
-        const newPassword = req.body.newPassword;
+        let newPassword = req.body.newPassword;
         const confirmPassword = req.body.confirmPassword;
         const user = req.user;
         
@@ -143,8 +146,8 @@ exports.changePassword = async (req,res,next) => {
             });
         }
 
-        user.password = await bcryptjs.hash(newPassword,8);
-        await user.save();    
+        newPassword = await bcryptjs.hash(newPassword,8);
+        await UserModel.findByIdAndUpdate(user._id,{ password: newPassword });
 
         res.status(200).json({
             status: 1,
@@ -168,6 +171,15 @@ exports.forgotPassword = async (req,res,next) => {
                 data: {}
             });
         }
+
+        if(user.status === 1){
+            return res.status(401).json({
+                status: 0,
+                message: 'Please verify your account!',
+                data: {}
+            });
+        }    
+
         const otp = Math.floor(100000 + Math.random() * 900000);
         user.otp = otp;
         await user.save();
