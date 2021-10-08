@@ -13,13 +13,13 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-app.use('/',(req,res)=>{
-    res.status(503).json({
-        status: 0,
-        message: "Server Under Maintenance!",
-        data: {}
-    })
-});
+// app.use('/',(req,res)=>{
+//     res.status(503).json({
+//         status: 0,
+//         message: "Server Under Maintenance!",
+//         data: {}
+//     })
+// });
 
 app.use('/user',userRouter);
 
