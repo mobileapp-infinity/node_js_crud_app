@@ -110,7 +110,6 @@ exports.verifyOTP = async (req,res,next) => {
     }
 }
 
-
 //change password
 //path /user/changePassword
 exports.changePassword = async (req,res,next) => {
@@ -195,7 +194,7 @@ exports.forgotPassword = async (req,res,next) => {
 
 exports.updateProfile = async (req,res,next) => {
     try {
-        const user = await req.user.updateOne(req.body,{ new: true });
+        const user = await UserModel.findByIdAndUpdate(req.user._id,req.body,{ new: true });
         res.status(200).json({
             status: 1,
             message: "Profile has been updated!",
