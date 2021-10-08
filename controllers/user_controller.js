@@ -207,7 +207,6 @@ exports.logoutUser = async (req,res,next) => {
     try {
         const user = req.user;
         user.generateAuthToken();
-        await user.save();
         res.status(200).json({
             status: 1,
             message: "You have been logged out successfully!"
