@@ -58,7 +58,6 @@ exports.loginUser = async (req,res,next) => {
         }
 
         user.generateAuthToken();
-        await user.save();    
         const userObj = user.toObject();
 
         delete userObj['otp'];
