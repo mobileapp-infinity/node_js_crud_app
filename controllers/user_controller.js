@@ -10,7 +10,6 @@ exports.registerUser = async (req,res,next) => {
         userModel.status = 1;
         userModel.otp = Math.floor(100000 + Math.random() * 900000);
         userModel.generateAuthToken();
-        await userModel.save();
         res.status(201).json({
             status: 1,
             message: 'Registered Successfully!',
