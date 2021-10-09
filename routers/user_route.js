@@ -9,7 +9,7 @@ userRoute.route('/verifyOTP').post(authMiddleware,verifyOTP);
 userRoute.route('/changePassword').post(authMiddleware,changePassword);
 userRoute.route('/updateProfile').post(authMiddleware,updateProfile);
 userRoute.route('/logoutUser').get(authMiddleware,logoutUser);
-// userRoute.route('/forgotPassword').post(forgotPassword);
+userRoute.route('/forgotPassword').post(forgotPassword);
 
 
 module.exports = userRoute;
