@@ -81,13 +81,13 @@ exports.verifyOTP = async (req,res,next) => {
         const enteredOTP = req.body.otp;
         const user = req.user;
 
-        if(user.status === 2){
-            return res.status(200).json({
-                status: 1,
-                message: 'OTP Already  Verified!',
-                data: user
-            });
-        }
+        // if(user.status === 2){
+        //     return res.status(200).json({
+        //         status: 1,
+        //         message: 'OTP Already  Verified!',
+        //         data: user
+        //     });
+        // }
         
         if(enteredOTP === user.otp.toString()){
             user.status = 2;
