@@ -9,14 +9,13 @@ exports.registerUser = async (req,res,next) => {
         const userModel = UserModel(req.body);
         userModel.status = 1;
         userModel.otp = Math.floor(100000 + Math.random() * 900000);
-        userModel.generateAuthToken();
+        await userModel.generateAuthToken();
         res.status(201).json({
             status: 1,
             message: 'Registered Successfully!',
             data: userModel
         });
     } catch (error) {
-        console.log(error);
         next(error);
     }
 }
@@ -56,7 +55,7 @@ exports.loginUser = async (req,res,next) => {
             });
         }
 
-        user.generateAuthToken();
+        await user.generateAuthToken();
         const userObj = user.toObject();
 
         delete userObj['otp'];
@@ -206,7 +205,7 @@ exports.updateProfile = async (req,res,next) => {
 exports.logoutUser = async (req,res,next) => {
     try {
         const user = req.user;
-        user.generateAuthToken();
+        await user.generateAuthToken();
         res.status(200).json({
             status: 1,
             message: "You have been logged out successfully!"

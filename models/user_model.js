@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = mongoose.Schema({
     userName: {
@@ -47,12 +48,18 @@ const userSchema = mongoose.Schema({
     }
 });
 
+userSchema.plugin(uniqueValidator, { message: '{VALUE} already exist!'});
+
 userSchema.methods.generateAuthToken = async function () {
-    const user = this;
-    const token = jwt.sign({ _id: user._id.toString() },process.env.JWT_SECRET);
-    user.token = token;
-    await user.save();
-    return token;
+    try {
+        const user = this;
+        const token = jwt.sign({ _id: user._id.toString() },process.env.JWT_SECRET);
+        user.token = token;
+        await user.save();   
+        return token;   
+    } catch (error) {
+        throw new Error(error.message);
+    }
 }
 
 userSchema.pre('save',async function (next) {
