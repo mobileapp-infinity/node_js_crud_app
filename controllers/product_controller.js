@@ -91,15 +91,22 @@ exports.deleteProduct = async (req,res,next) => {
 
 exports.getProductsByPayoutModeId = async (req,res,next) => {
     try {
+       
+        const products = await ProductModel.find({ payoutModeId:req.query.payoutModeId });
 
-        const products = await ProductModel.find({ payoutModeId:req.url.productId });
+        if(products.length == 0){
+            return res.status(200).json({
+                status: 1,
+                message: "No Product Found!",
+                data: products
+            });    
+        }
 
         res.status(200).json({
             status: 1,
             message: "Product Found!",
             data: products
         });
-
 
     } catch (error) {
         next(error);
